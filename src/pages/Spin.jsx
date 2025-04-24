@@ -4,10 +4,10 @@ import confetti from "canvas-confetti";
 const cricketTypes = [
   { label: "🏏 Bat", value: "🏏" },
   { label: "🏐 Ball", value: "🏐" },
-  { label: "🧤 Gloves", value: "🧤" },
+//   { label: "🧤 Gloves", value: "🧤" },
   { label: "🏆 Trophy", value: "🏆" },
-  { label: "🎯 Target", value: "🎯" },
-  { label: "🥅 Stumps", value: "🥅" },
+//   { label: "🎯 Target", value: "🎯" },
+//   { label: "🥅 Stumps", value: "🥅" },
 ];
 
 const Spin = () => {

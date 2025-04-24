@@ -126,7 +126,7 @@ const Home = () => {
                   <div className="w-full aspect-[4/3] flex justify-center items-center overflow-hidden">
                     <img src={gameimg3} className="object-contain h-full w-full" alt="Spin" />
                   </div>
-                  <h3 className="mt-4 text-lg font-bold text-center">Spin</h3>
+                  <h3 className="mt-4 text-lg font-bold text-center">Casino </h3>
                 </div>
               </Link>
 
@@ -136,7 +136,7 @@ const Home = () => {
                   <div className="w-full aspect-[4/3] flex justify-center items-center overflow-hidden">
                     <img src={gameimg4} className="object-contain h-full w-full" alt="Mang Pati" />
                   </div>
-                  <h3 className="mt-4 text-lg font-bold text-center">Mang Pati</h3>
+                  <h3 className="mt-4 text-lg font-bold text-center">Spin</h3>
                 </div>
               </div>
 

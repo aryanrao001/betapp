@@ -18,7 +18,7 @@ const Header = () => {
           {/* Desktop Menu */}
           <nav className="hidden md:flex w-2/3 justify-center">
             <ul className="flex gap-5 poppins-medium text-sm text-white items-center">
-              <li className="hover:text-lime-300 cursor-pointer">Home</li>
+              <Link to='/' > <li className="hover:text-lime-300 cursor-pointer">Home</li>  </Link>
               <li className="flex items-center gap-1 hover:text-lime-300 cursor-pointer">
                 <Dot /> Games
               </li>
