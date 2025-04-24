@@ -101,7 +101,7 @@ const Home = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
 
               {/* Toss */}
-              <Link to='/' className="w-full">
+              <Link to='/toss' className="w-full">
                 <div className="bg-[#0f0f0f] p-4 rounded-xl border-4 border-[#009CFF] flex flex-col items-center transition-transform hover:scale-105">
                   <div className="w-full aspect-[4/3] flex justify-center items-center overflow-hidden">
                     <img src={gameimg1} className="object-contain h-full w-full" alt="Toss" />
