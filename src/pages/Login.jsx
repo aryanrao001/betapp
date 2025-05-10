@@ -59,7 +59,7 @@ const Login = () => {
           toast.success(response.data.message);
           // localStorage.setItem('token', response.data.token);
           setToken(response.data.token); // Update context
-          // navigate('/'); // Optionally redirect after login
+          navigate('/'); // Optionally redirect after login
           } else {
               toast.error(response.data.message);
           }

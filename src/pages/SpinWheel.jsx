@@ -206,7 +206,7 @@ const handleSpinClick = async () => {
       {/* {result && <ResultPopup />} */}
 
       {/* Betting Board */}
-      <div className=" w-full h-[80vh] flex flex-col md:flex-row  justify-evenly ">
+      <div className=" w-full md:h-auto h-[80vh] flex flex-col md:flex-row  justify-evenly ">
         <div className="bg-gray-900 relative p-4 w-full md:w-[78%] grid gap-2" >
           { bettingClosed && (
             <div className="w-full h-full z-50 bg-[#00000094] absolute top-0 flex justify-center items-center " >
@@ -220,7 +220,7 @@ const handleSpinClick = async () => {
             {numbers.flat().map((num, i) => (
               <div
                 key={i}
-                className={`w-8 h-8 flex justify-center items-center text-white font-bold rounded cursor-pointer ${
+                className={`w-8 md:w-12 md:h-12 h-8 flex justify-center items-center text-white font-bold rounded cursor-pointer ${
                   num % 2 === 0 ? 'bg-black' : 'bg-red-600'
                 }`}
                 onClick={() => handleBet(num)} // replace with actual handler

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import logo from '../assets/images/logo.png';
 import { BellDot, Search, Dot, Menu, X } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, Links } from 'react-router-dom';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -42,9 +42,9 @@ const Header = () => {
             <div className="bg-black/10 p-2 rounded-full backdrop-blur-3xl">
               <Search />
             </div>
-            <button className="bg-[#ACFC00]/60 rounded-[15px] px-4 py-2 text-sm font-semibold">
-              Find Out More
-            </button>
+            <Link to='/login' className="bg-[#ACFC00]/60 rounded-[15px] px-4 py-2 text-sm font-semibold">
+              Login
+            </Link>
           </div>
 
           {/* Mobile Menu Toggle */}
@@ -77,9 +77,9 @@ const Header = () => {
                   <Search />
                 </div>
               </div>
-              <button className="bg-[#ACFC00]/60 rounded-[15px] px-4 py-2 mt-4 text-sm font-semibold w-full">
-                Find Out More
-              </button>
+              <Link to='/login' className="bg-[#ACFC00]/60 rounded-[15px] px-4 py-2 mt-4 text-sm font-semibold w-full">
+                Login
+              </Link>
             </ul>
           </div>
         )}
