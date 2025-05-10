@@ -13,22 +13,27 @@ import SpinWheel from './pages/SpinWheel';
 import Slottwo from './pages/Slottwo';
 import Slot from './pages/Slot';
 import Tosst from './pages/Tosst';
+import Register from './pages/Register';
 
 
 const App = () => {
   const location = useLocation();
 
   // Condition to hide Header and Footer on the login page
-  const showHeaderFooter = location.pathname !== '/login';
+  const showHeaderFooter = location.pathname !== '/login' && location.pathname !== '/register';
+  // const showHeaderFooter2 = location.pathname !== '/register';
+  
 
 
   return (
     <div className="overflow-hidden">
       <ToastContainer />
       {showHeaderFooter && <Header />} {/* Render Header only if not on Login page */}
+      {/* {showHeaderFooter2 && <Header/> } */}
 
       <Routes>
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register/>} />
         <Route path="/" element={<Home />} />
         <Route path="/toss" element={<Toss />} />
         <Route path="/slot" element={<Slot />} />
