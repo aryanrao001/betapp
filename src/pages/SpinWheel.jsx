@@ -149,8 +149,6 @@ const getWinningNumber = async () => {
 
 
 
-
-
 const handleSpinClick = async () => {
   if (isSpinning) return;
 
@@ -205,11 +203,33 @@ const handleSpinClick = async () => {
       {/* Popup */}
       {/* {result && <ResultPopup />} */}
 
+      {
+        result && (
+          <div className="fixed z-50 inset-0 flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm">
+            <div className="relative bg-white text-black px-8 py-6 rounded-2xl shadow-2xl transform scale-105 transition duration-300 animate-fade-in-up">
+              
+              {/* Close button */}
+              <button className="absolute top-2 right-2 text-gray-500 hover:text-black text-xl font-bold" onClick={() => setShow(false)}>
+                ×
+              </button>
+
+              {/* Icon + Title */}
+              <div className="flex flex-col items-center justify-center">
+                <span className="text-4xl">🎉</span>
+                <h2 className="text-2xl font-bold mt-2">You Got</h2>
+                <p className="mt-1 text-5xl font-extrabold text-purple-700">{result}</p>
+                <p className="text-sm text-gray-600 mt-2">Nice spin! Try again to beat your luck!</p>
+              </div>
+            </div>
+          </div>
+        )
+      }
+
       {/* Betting Board */}
       <div className=" w-full md:h-auto h-[80vh] flex flex-col md:flex-row  justify-evenly ">
         <div className="bg-gray-900 relative p-4 w-full md:w-[78%] grid gap-2" >
           { bettingClosed && (
-            <div className="w-full h-full z-50 bg-[#00000094] absolute top-0 flex justify-center items-center " >
+            <div className="w-full h-full z-40 bg-[#00000094] absolute top-0 flex justify-center items-center " >
             <h1 className="text-2xl"  >Betting is Closed ....</h1>
             </div>
           )}
