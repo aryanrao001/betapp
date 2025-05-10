@@ -206,7 +206,7 @@ const handleSpinClick = async () => {
       {/* {result && <ResultPopup />} */}
 
       {/* Betting Board */}
-      <div className=" w-full h-[80vh] flex flex-col  justify-evenly ">
+      <div className=" w-full h-[80vh] flex flex-col md:flex-row  justify-evenly ">
         <div className="bg-gray-900 relative p-4 w-full md:w-[78%] grid gap-2" >
           { bettingClosed && (
             <div className="w-full h-full z-50 bg-[#00000094] absolute top-0 flex justify-center items-center " >
