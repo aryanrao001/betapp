@@ -19,6 +19,7 @@ const SpinWheel = () => {
   const [winOrLose, setWinOrLose] = useState(null);
   const [selectedChip, setSelectedChip] = useState("");
 
+
   const { backendUrl , token  } = useContext(AllContext);
 
   
@@ -38,8 +39,9 @@ const SpinWheel = () => {
       if(timeLeft === 5){
         handleSpinClick();
       }
-      if(timeLeft === 30){
+      if(timeLeft === 28){
         setBettingClosed(false);
+        setResult(0);
       }
     };
 
@@ -156,6 +158,7 @@ const handleSpinClick = async () => {
   if (winningNumber !== null) {
     spinToTarget(winningNumber);
   }
+  
 };
 
     // Spins and lands with 37 at top
@@ -179,7 +182,7 @@ const handleSpinClick = async () => {
           <Triangle size={30} className="text-red-600" />
         </div>
 
-        <img src={midwheel} className="relative z-50 rounded-full" alt="" />
+        <img src={midwheel} className="relative z-49 rounded-full" alt="" />
 
         <div className="wheel" ref={wheelRef}>
           {[...Array(25)].map((_, i) => (
@@ -203,8 +206,8 @@ const handleSpinClick = async () => {
       {/* {result && <ResultPopup />} */}
 
       {/* Betting Board */}
-      <div className=" w-full flex justify-evenly ">
-        <div className="bg-gray-900 relative p-4 w-[78%] grid gap-2" >
+      <div className=" w-full h-[80vh] flex flex-col  justify-evenly ">
+        <div className="bg-gray-900 relative p-4 w-full md:w-[78%] grid gap-2" >
           { bettingClosed && (
             <div className="w-full h-full z-50 bg-[#00000094] absolute top-0 flex justify-center items-center " >
             <h1 className="text-2xl"  >Betting is Closed ....</h1>
@@ -212,12 +215,12 @@ const handleSpinClick = async () => {
           )}
           <div className="grid grid-cols-[repeat(11,minmax(0,1fr))] gap-1">
             <div className="border-2 px-2 row-span-5 flex justify-center items-center text-white font-bold rounded">
-              0
+              {result}
             </div>
             {numbers.flat().map((num, i) => (
               <div
                 key={i}
-                className={`w-12 h-12 flex justify-center items-center text-white font-bold rounded cursor-pointer ${
+                className={`w-8 h-8 flex justify-center items-center text-white font-bold rounded cursor-pointer ${
                   num % 2 === 0 ? 'bg-black' : 'bg-red-600'
                 }`}
                 onClick={() => handleBet(num)} // replace with actual handler
@@ -227,7 +230,7 @@ const handleSpinClick = async () => {
             ))}
           </div>
 
-          <div className="flex space-x-2 justify-start mt-4">
+          <div className="flex space-x-2 w-full justify-start mt-4">
             {chips.map((chip, idx) => (
               <div key={idx} className="relative rounded-full flex justify-center items-center">
                 <img
@@ -248,7 +251,7 @@ const handleSpinClick = async () => {
             ))}
           </div>
         </div>
-        <div className="w-[20%] " >
+        <div className=" w-full md:w-[20%] " >
           <div className="w-full rounded-md overflow-hidden shadow-lg">
             <div className="bg-green-600 text-white text-center py-2 font-bold text-sm">HISTORY</div>
             <div className="bg-gray-900 text-white text-xs max-h-96 overflow-y-auto">
