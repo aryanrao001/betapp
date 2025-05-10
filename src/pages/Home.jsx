@@ -204,7 +204,7 @@ const Home = () => {
                         </div>
                       </div>
                     </div>
-                  <h1 className='py-4 text-xl font-semibold' >Cricket Slot</h1>
+                  <h1 className='py-4 text-xl font-semibold' >Spin </h1>
                 </div>
               </Link>
 
