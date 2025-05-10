@@ -1,26 +1,47 @@
-import React from 'react'
-import Home from './pages/Home'
-import Header from './components/Header'
-import Footer from './components/Footer' // Corrected casing
-import { Router , BrowserRouter, Routes, Route } from 'react-router-dom' // Corrected import
-import Toss from './pages/Toss'
-import Spin from './pages/Spin'
-import Casino from './pages/Casino'
+import React from 'react';
+import Home from './pages/Home';
+import Header from './components/Header';
+import Footer from './components/Footer'; // Corrected casing
+import { Routes, Route, useLocation } from 'react-router-dom'; // Removed unnecessary BrowserRouter
+import Toss from './pages/Toss';
+// import Spin from './pages/Spin';
+import Casino from './pages/Casino';
+import Login from './pages/Login';
+import { ToastContainer } from "react-toastify";
+// import Spintwo from './pages/Spintwo';
+import SpinWheel from './pages/SpinWheel';
+import Slottwo from './pages/Slottwo';
+import Slot from './pages/Slot';
+import Tosst from './pages/Tosst';
+
 
 const App = () => {
-  return (
-    <div className='overflow-hidden'>
-      <Header />
-        <Routes>
-          <Route path='/' element={<Home />} />
-          <Route path='/toss' element={<Toss/> }/>
-          <Route path='/spin' element={<Spin/>}/>
-          <Route path='/casino' element={<Casino/> }/>
-          {/* Consider adding a fallback route here */}
-        </Routes>
-      <Footer />
-    </div>
-  )
-}
+  const location = useLocation();
 
-export default App
+  // Condition to hide Header and Footer on the login page
+  const showHeaderFooter = location.pathname !== '/login';
+
+
+  return (
+    <div className="overflow-hidden">
+      <ToastContainer />
+      {showHeaderFooter && <Header />} {/* Render Header only if not on Login page */}
+
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/toss" element={<Toss />} />
+        <Route path="/slot" element={<Slot />} />
+        <Route path="/casino" element={<Casino />} />
+        <Route path="/slott" element={<Slottwo/>} />
+        <Route path="/spinwheel" element={<SpinWheel/>} />
+        <Route path="/secondtoss" element={<Tosst/>} />
+        {/* Consider adding a fallback route here */}
+      </Routes>
+
+      {showHeaderFooter && <Footer />} {/* Render Footer only if not on Login page */}
+    </div>
+  );
+};
+
+export default App;

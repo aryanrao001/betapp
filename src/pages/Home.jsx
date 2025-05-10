@@ -13,6 +13,13 @@ import betimg1 from '../assets/images/betitng-img-1.png'
 import betimg2 from '../assets/images/betitng-img-2.png'
 import betimg3 from '../assets/images/betitng-img-3.png'
 import content5 from '../assets/images/last-chance-bg.jpg'
+import midwheel from "../assets/images/midwheel.png";
+import head from "../assets/images/head.webp";
+import tail from "../assets/images/tail.webp";
+import cricketslot from "../assets/images/cricketslot.png"
+import mi from "../assets/images/mi-logo.avif"
+import rcb from "../assets/images/rcb-logo.avif"
+
 import { User,NotebookText , Gamepad2 , ArrowUpRight,   } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
@@ -97,10 +104,9 @@ const Home = () => {
             🎲 <span>Live</span> <span className="text-lime-400">Games</span>
           </h2>
 
-          <div className="sm:border sm:border-blue-600 rounded-xl sm:py-12 sm:px-10">
+          {/* <div className="sm:border sm:border-blue-600 rounded-xl sm:py-12 sm:px-10">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
 
-              {/* Toss */}
               <Link to='/toss' className="w-full">
                 <div className="bg-[#0f0f0f] p-4 rounded-xl border-4 border-[#009CFF] flex flex-col items-center transition-transform hover:scale-105">
                   <div className="w-full aspect-[4/3] flex justify-center items-center overflow-hidden">
@@ -110,7 +116,6 @@ const Home = () => {
                 </div>
               </Link>
 
-              {/* Aviator */}
               <div className="w-full">
                 <div className="bg-[#0f0f0f] p-4 rounded-xl border-4 border-[#ACFC00] flex flex-col items-center transition-transform hover:scale-105">
                   <div className="w-full aspect-[4/3] flex justify-center items-center overflow-hidden">
@@ -120,7 +125,6 @@ const Home = () => {
                 </div>
               </div>
 
-              {/* Spin */}
               <Link to='/spin' className="w-full">
                 <div className="bg-[#0f0f0f] p-4 rounded-xl border-4 border-[#8D00F9] flex flex-col items-center transition-transform hover:scale-105">
                   <div className="w-full aspect-[4/3] flex justify-center items-center overflow-hidden">
@@ -130,7 +134,6 @@ const Home = () => {
                 </div>
               </Link>
 
-              {/* Mang Pati */}
               <div className="w-full">
                 <div className="bg-[#0f0f0f] p-4 rounded-xl border-4 border-[#FFD600] flex flex-col items-center transition-transform hover:scale-105">
                   <div className="w-full aspect-[4/3] flex justify-center items-center overflow-hidden">
@@ -140,6 +143,72 @@ const Home = () => {
                 </div>
               </div>
 
+            </div>
+          </div> */}
+
+          <div className=" rounded-xl sm:py-12 sm:px-10">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+              <Link to='/toss' className="w-full">
+                <div className=" h-80 p-4 rounded-xl flex flex-col items-center transition-transform hover:scale-105">
+                  <div className="relative w-full h-[80%] p-2 spin-coin">
+                    {/* Front Side (Head) */}
+                    <div className="absolute w-full h-full backface-hidden">
+                      <img src={head} alt="Head" className="w-full h-full object-contain rounded-full" />
+                    </div>
+
+                    {/* Back Side (Tail) */}
+                    <div className="absolute w-full h-full rotate-y-180 backface-hidden">
+                      <img src={tail} alt="Tail" className="w-full h-full object-contain rounded-full" />
+                    </div>
+                  </div>
+                  <h1 className='py-4 text-xl font-semibold' >Toss</h1>
+                </div>
+              </Link>
+
+              <Link to='/slott' >
+              <div className="h-80 p-4 rounded-xl flex flex-col items-center transition-transform hover:scale-105 shake-up-down">
+                <div className="relative w-full h-[80%] p-2">
+                  {/* Front Side (Head) */}
+                  <div className="absolute w-full h-full">
+                    <img src={cricketslot} alt="Head" className="w-full h-full object-contain rounded-full" />
+                  </div>
+                </div>
+                <h1 className='py-4 text-xl font-semibold'>Cricket Slot</h1>
+              </div>
+              </Link>
+
+              <Link to='/slot' className="w-full">
+              <div className="h-80 p-4 rounded-xl flex flex-col items-center transition-transform hover:scale-105 shake-left-right">
+                <div className="relative w-full h-[80%] p-2">
+                  <div className="absolute w-full h-full">
+                    <img src={mi} alt="Head" className="w-full h-full object-contain rounded-full" />
+                  </div>
+                </div>
+                <h1 className='py-4 text-xl font-semibold'>Team Slot</h1>
+              </div>
+              </Link>
+
+              <Link to='spinwheel' >
+                <div className="w-full relative flex flex-col justify-center items-center h-80"  >
+                    <div className="container2 w-full h-[80%] relative flex flex-col items-center">
+                      <img src={midwheel} className="relative z-40 h-30 rounded-full" alt="" />
+                      <div className="wheel2 w-20 h-20 spin-infinite " >
+                        {[...Array(25)].map((_, i) => (
+                          <span key={i} style={{ "--i": i }} className={`${(i + 1) % 2 === 0 ? "bg-gray-500" : "bg-red-600"}`} />
+                        ))}
+                        <div className="number">
+                          {[...Array(50)].map((_, i) => (
+                            <b key={i} style={{ "--i": i }} className="text-sm" >{i + 1}</b>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  <h1 className='py-4 text-xl font-semibold' >Cricket Slot</h1>
+                </div>
+              </Link>
+
+              
             </div>
           </div>
         </div>
