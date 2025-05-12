@@ -14,6 +14,10 @@ import Slottwo from './pages/Slottwo';
 import Slot from './pages/Slot';
 import Tosst from './pages/Tosst';
 import Register from './pages/Register';
+import Profile from './pages/Profile';
+import  Wallet  from './pages/Wallet';
+import Activity from './pages/Activity';
+import Promotion from './pages/Promotion';
 
 
 const App = () => {
@@ -41,6 +45,10 @@ const App = () => {
         <Route path="/slott" element={<Slottwo/>} />
         <Route path="/spinwheel" element={<SpinWheel/>} />
         <Route path="/secondtoss" element={<Tosst/>} />
+        <Route path="/profile" element={<Profile/>} />
+        <Route path="/wallet" element={<Wallet/>} />
+        <Route path="/activity" element={<Activity/>} />
+        <Route path="/promo" element={<Promotion/>}/>
         {/* Consider adding a fallback route here */}
       </Routes>
 

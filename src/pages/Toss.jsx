@@ -19,18 +19,19 @@ const Toss = () => {
   const [popupImage, setPopupImage] = useState("");
   const [bets, setBets] = useState([]);
 
-  const { backendUrl, token } = useContext(AllContext);
+  const { backendUrl, token , balance } = useContext(AllContext);
 
   useEffect(() => {
     const updateTimer = () => {
       const timeLeft = 30 - (new Date().getSeconds() % 30);
       setTimer(timeLeft);
-      if (timeLeft === 15) {
+      if (timeLeft <= 15) {
         setIsBetAllowed(false);
       }
       if (timeLeft === 5) {
-        declareResult();
-        tossResult();
+        declareResult().then(() => {
+          tossResult(); // now this will fetch latest bets after result is stored
+        });
       }
     };
 
@@ -234,17 +235,17 @@ const Toss = () => {
         )}
       </div> */}
 
-      <div className='h-[250vh] md:h-[100vh] flex justify-center items-center mt-9'>
+      <div className='h-[220vh] md:h-[100vh] flex justify-center items-center mt-9'>
         <div className='bg-gray-900 w-[80%] h-[200vh] md:h-[90vh]'>
           <div className="top-bar h-[20vh]">
             <div className="header-container">
-              <div className="header-content">
+              <div className="header-content text-left md:text-center ">
                 <div className="title">TOSS COIN</div>
                 <h4 className="text-sm py-2">TOSS THE COIN AND TRY LUCK</h4>
               </div>
               <div className="info">
-                <span>$100</span>
-                <span>ExD3.421</span>
+                <span>Rs.{balance}</span>
+                {/* <span>ExD3.421</span> */}
               </div>
               <div className="hud-line"></div>
             </div>
@@ -278,13 +279,11 @@ const Toss = () => {
 
               {/* Coin Display - Mobile Top */}
               <div
-                className={`w-full h-60 md:h-40 flex items-center rounded-full transition-transform duration-700 ease-in-out transform 
+                className={`w-full h-60 md:h-40 flex items-center justify-center rounded-full transition-transform duration-700 ease-in-out transform 
                             order-first md:order-none`}
               >
-                <div
-                  className="w-full h-full flex items-center justify-center rounded-full text-3xl font-bold"
-                >
-                  <img className="w-40 " src={flipClass === "flip-head" ? head : tail} alt="" />
+                <div className={`w-40 h-40 rounded-full transition-transform duration-700 ease-in-out transform ${flipClass}`}>
+                  <img className="w-full h-full object-contain" src={flipClass === "flip-head" ? head : tail} alt="Coin" />
                 </div>
               </div>
 
@@ -351,7 +350,7 @@ const Toss = () => {
             {/* Top Double */}
             <div className="md:col-span-1 w-full ">
               <div className="text-center text-lg border-b border-gray-700 pb-2 mb-2">
-                TOP <span className="text-blue-400">DOUBLE</span>
+                Last <span className="text-blue-400">Results</span>
               </div>
               <div className="space-y-2 text-sm">
                 {

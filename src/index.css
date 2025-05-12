@@ -358,6 +358,10 @@ body{
   /* padding: 10px 20px 0; */
 }
 
+@media only screen and (max-width:576px) {
+  .header-content { text-align: left; padding: 0 0 0 10px;}  
+}
+
 .title {
   font-size: 24px;
   text-shadow: 0 0 10px #00f2ff;
