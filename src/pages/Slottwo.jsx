@@ -62,10 +62,11 @@ const Slottwo = () => {
           { headers: { Authorization: `Bearer ${token}` } }
         );
 
-        console.log(response);
-        console.log(selectedItem);
+        // console.log(response);
+        // console.log(selectedItem);
 
         setResult(response.data.message);
+        setUpdate(1);
 
         const resultSide = response.data.resultSide;
 
@@ -89,6 +90,7 @@ const Slottwo = () => {
         setSpinning(false);
       }
     }, 1500);
+    setUpdate(0);
   };
 
   const handleSelectItem = (item) => {

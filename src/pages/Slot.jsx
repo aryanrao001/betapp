@@ -31,7 +31,7 @@ const Slot= () => {
   const [selectedItem, setSelectedItem] = useState("");
   const [result, setResult] = useState("");
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const { backendUrl } = useContext(AllContext);
+  const { backendUrl , setUpdate } = useContext(AllContext);
 
   const playSound = (name) => {
     // Optional: Add sounds if needed
@@ -66,10 +66,11 @@ const Slot= () => {
           { headers: { Authorization: `Bearer ${token}` } }
         );
 
-        console.log(response);
-        console.log(selectedItem);
+        // console.log(response);
+        // console.log(selectedItem);
 
         setResult(response.data.message);
+        setUpdate(1);
 
         const resultSide = response.data.resultSide;
 
@@ -93,6 +94,7 @@ const Slot= () => {
         setSpinning(false);
       }
     }, 1500);
+    setUpdate(0);
   };
 
   const handleSelectItem = (item) => {
@@ -120,7 +122,7 @@ const Slot= () => {
         </div>
 
         {/* Bet Inputs */}
-        <div className="flex flex-col gap-6 mb-6">
+        <div className="flex relative flex-col gap-6 mb-6">
           <input
             type="number"
             placeholder="Enter Amount to Bet"
@@ -130,10 +132,10 @@ const Slot= () => {
           />
 
           {/* Custom Dropdown */}
-          <div className="relative">
+          <div className="relative h-30 overflow-auto ">
             <button
               onClick={handleDropdownToggle}
-              className="w-full px-5 py-3 text-white text-lg rounded-xl focus:outline-none border-2 border-yellow-400 bg-gray-800 flex items-center justify-between"
+              className="  w-full px-5 py-3 text-white text-lg rounded-xl focus:outline-none border-2 border-yellow-400 bg-gray-800 flex items-center justify-between"
             >
               {selectedItem !== "" ? (
                 <>

@@ -20,7 +20,7 @@ const SpinWheel = () => {
   const [selectedChip, setSelectedChip] = useState("");
 
 
-  const { backendUrl , token  } = useContext(AllContext);
+  const { backendUrl , token , setUpdate  } = useContext(AllContext);
 
   
 
@@ -42,6 +42,7 @@ const SpinWheel = () => {
       if(timeLeft === 28){
         setBettingClosed(false);
         setResult(0);
+        setUpdate(0);
       }
     };
 
@@ -118,6 +119,7 @@ const handleBet = async (num) => {
     if (resData.success === true) {
       toast.success(resData.message);
       console.log("✅ Bet placed:", resData.message);
+      setUpdate(1);
     } else {
       toast.error(resData.message);
       console.log("❌ Failed to place bet:", resData.message);
@@ -205,7 +207,7 @@ const handleSpinClick = async () => {
 
       {
         result && (
-          <div className="fixed z-50 inset-0 flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm">
+          <div className="fixed z-50 inset-0 flex items-center justify-center bg-[#000000b3] bg-opacity-60 backdrop-blur-sm">
             <div className="relative bg-white text-black px-8 py-6 rounded-2xl shadow-2xl transform scale-105 transition duration-300 animate-fade-in-up">
               
               {/* Close button */}
@@ -216,9 +218,9 @@ const handleSpinClick = async () => {
               {/* Icon + Title */}
               <div className="flex flex-col items-center justify-center">
                 <span className="text-4xl">🎉</span>
-                <h2 className="text-2xl font-bold mt-2">You Got</h2>
+                <h2 className="text-2xl font-bold mt-2">Resulted No is :</h2>
                 <p className="mt-1 text-5xl font-extrabold text-purple-700">{result}</p>
-                <p className="text-sm text-gray-600 mt-2">Nice spin! Try again to beat your luck!</p>
+                <p className="text-sm text-gray-600 mt-2">Nice spin! Thank Your!</p>
               </div>
             </div>
           </div>

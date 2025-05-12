@@ -19,7 +19,7 @@ const Toss = () => {
   const [popupImage, setPopupImage] = useState("");
   const [bets, setBets] = useState([]);
 
-  const { backendUrl, token , balance } = useContext(AllContext);
+  const { backendUrl, token , balance , setUpdate } = useContext(AllContext);
 
   useEffect(() => {
     const updateTimer = () => {
@@ -32,6 +32,8 @@ const Toss = () => {
         declareResult().then(() => {
           tossResult(); // now this will fetch latest bets after result is stored
         });
+        setUpdate(0);
+
       }
     };
 
@@ -71,6 +73,7 @@ const Toss = () => {
           Authorization: `Bearer ${token}`,
         },
       });
+      
 
       const outcome = response.data.result;
       setResult(outcome);
@@ -126,6 +129,7 @@ const Toss = () => {
         toast.success(response.data.message);
         setUserChoice(choice);
         setMessage(`🎯 You chose ${choice.toUpperCase()}! Waiting for result...`);
+        setUpdate(1);
       } else {
         toast.error(response.data.message);
       }
@@ -235,7 +239,7 @@ const Toss = () => {
         )}
       </div> */}
 
-      <div className='h-[220vh] md:h-[100vh] flex justify-center items-center mt-9'>
+      <div className='h-auto md:h-[100vh] flex justify-center items-center my-19'>
         <div className='bg-gray-900 w-[80%] h-[200vh] md:h-[90vh]'>
           <div className="top-bar h-[20vh]">
             <div className="header-container">

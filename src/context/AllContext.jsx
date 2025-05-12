@@ -6,7 +6,8 @@ export const AllContext = createContext();
 const AllContextProvider = (props) => {
   const [token, setToken] = useState(() => localStorage.getItem("token")); // ✅ Load token initially from localStorage
   const [userDetails, setUserDetails] = useState();
-  const [balance, setBalance] = useState()
+  const [balance, setBalance] = useState();
+  const [update, setUpdate] = useState();
 
   useEffect(() => {
     if (token) {
@@ -38,13 +39,10 @@ const AllContextProvider = (props) => {
     };
 
     fetchSummary();
-  }, [token]);
+  }, [update]);  
 
 
-  
-
-
-  const value = { backendUrl, setToken, token, balance , userDetails };
+  const value = { backendUrl, setToken, token, balance , userDetails , setUpdate };
 
   return (
     <AllContext.Provider value={value}>
