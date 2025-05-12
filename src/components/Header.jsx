@@ -1,10 +1,16 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import logo from '../assets/images/logo.png';
 import { BellDot, Search, Dot, Menu, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { AllContext } from '../context/AllContext';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { token , balance } = useContext(AllContext);
+  // useEffect(() => {
+  //   const tok
+  // }, [third])
+  
 
   return (
     <>
@@ -77,7 +83,17 @@ const Header = () => {
                   <Search />
                 </div>
               </div>
-              <Link to='/login' > <li className="bg-[#ACFC00]/60 rounded-[15px] px-4 py-2 mt-4 text-sm font-semibold w-full">Login</li>  </Link>
+              {
+              token ? (
+                <span className='text-center bg-[#ACFC00]/60 py-2 ' >{balance}</span>
+              ) : (
+                <Link to='/login'>
+                  <li className=" bg-[#ACFC00]/60 text-center rounded-[15px] px-4 py-2 mt-4 text-sm font-semibold w-full">
+                    Login
+                  </li>
+                </Link>
+              )
+            }
 
               {/* <Link to='/login' className="bg-[#ACFC00]/60 rounded-[15px] px-4 py-2 mt-4 text-sm font-semibold w-full">
                 Login

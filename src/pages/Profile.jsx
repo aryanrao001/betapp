@@ -7,14 +7,13 @@ import {
   Settings,
   LogOut,
 } from "lucide-react";
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { AllContext } from '../context/AllContext';
 
 
 
 
 const Profile = () => {
-
 
     const {
     balance,
@@ -24,6 +23,12 @@ const Profile = () => {
     error,
     userDetails
   } = useContext(AllContext);
+  const navigate = useNavigate();
+
+  const handleLogout = () =>{
+    localStorage.removeItem('token');
+    navigate('/login')
+  }
   
   return (
     <div className="w-full min-h-screen bg-black text-white flex flex-col">
@@ -117,7 +122,7 @@ const Profile = () => {
 
             <div className="flex items-center justify-between cursor-pointer hover:opacity-80">
                 <div 
-                // onClick={handleLogout}
+                onClick={handleLogout}
                  className="flex items-center gap-3">
                     <LogOut className="w-5 h-5 text-red-400" />
                 <span className="text-md font-medium text-red-400">Logout</span>
