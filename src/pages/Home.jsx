@@ -178,7 +178,7 @@ const Home = () => {
               </div>
               </Link>
 
-              <Link to='/slot' className="w-full">
+              <Link to='/newslot' className="w-full">
               <div className="h-80 p-4 rounded-xl flex flex-col items-center transition-transform hover:scale-105 shake-left-right">
                 <div className="relative w-full h-[80%] p-2">
                   <div className="absolute w-full h-full">

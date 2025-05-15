@@ -4,22 +4,27 @@ import axios from "axios";
 import { ArrowUp, ArrowDown, CircleX } from 'lucide-react';
 import { AllContext } from "../context/AllContext";
 
-import helmet from "../assets/images/helmet.png";
-import bat from "../assets/images/bat.png";
-import ball from "../assets/images/ball.png";
-// import kkrLogo from "../assets/images/kkr-logo.avif";
-// import dcLogo from "../assets/images/dc-logo.avif";
-// import rrLogo from "../assets/images/rr-logo.avif";
-// import pbksLogo from "../assets/images/pbks-logo.avif";
-// import srhLogo from "../assets/images/srh-logo.avif";
-// import { AllContext } from "../context/AllContext";
+// Team logos
+import miLogo from "../assets/images/mi-logo.avif";
+import cskLogo from "../assets/images/csk-logo.avif";
+import rcbLogo from "../assets/images/rcb-logo.avif";
+import kkrLogo from "../assets/images/kkr-logo.avif";
+import dcLogo from "../assets/images/dc-logo.avif";
+import rrLogo from "../assets/images/rr-logo.avif";
+import pbksLogo from "../assets/images/pbks-logo.avif";
+import srhLogo from "../assets/images/srh-logo.avif";
 import lose from "../assets/images/lose.png";
 import win from "../assets/images/win.png";
 
 const cricketTypes = [
-  { value: "0", logo: helmet, name: "Helmet" },
-  { value: "1", logo: bat, name: "Bat" },
-  { value: "2", logo: ball, name: "Ball" },
+  { value: "0", logo: miLogo, name: "Mumbai Indians" },
+  { value: "1", logo: cskLogo, name: "Chennai Super Kings" },
+  { value: "2", logo: rcbLogo, name: "Royal Challengers Bangalore" },
+  { value: "3", logo: kkrLogo, name: "Kolkata Knight Riders" },
+  { value: "4", logo: dcLogo, name: "Delhi Capitals" },
+  { value: "5", logo: rrLogo, name: "Rajasthan Royals" },
+  { value: "6", logo: pbksLogo, name: "Punjab Kings" },
+  { value: "7", logo: srhLogo, name: "Sunrisers Hyderabad" },
 ];
 
 const getRandomIndex = () => Math.floor(Math.random() * cricketTypes.length);

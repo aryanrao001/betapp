@@ -2,10 +2,10 @@ import React, { useState, useEffect, useContext } from "react";
 import { AllContext } from "../context/AllContext";
 import axios from "axios";
 import { toast } from "react-toastify";
-import head from "../assets/images/head.webp";
-import tail from "../assets/images/tail.webp";
+import head from "../assets/images/head.png";
+import tail from "../assets/images/onerupee.png";
 import { LockKeyhole } from 'lucide-react';
-import winimage from "../assets/images/win.png";
+// import winimage from "../assets/images/win.png";
 const Toss = () => {
   const [timer, setTimer] = useState(30);
   const [userChoice, setUserChoice] = useState(null);

@@ -18,6 +18,7 @@ import Profile from './pages/Profile';
 import  Wallet  from './pages/Wallet';
 import Activity from './pages/Activity';
 import Promotion from './pages/Promotion';
+import NewSlot from './pages/NewSlot';
 
 
 const App = () => {
@@ -40,7 +41,7 @@ const App = () => {
         <Route path="/register" element={<Register/>} />
         <Route path="/" element={<Home />} />
         <Route path="/toss" element={<Toss />} />
-        <Route path="/slot" element={<Slot />} />
+        {/* <Route path="/slot" element={<Slot />} /> */}
         <Route path="/casino" element={<Casino />} />
         <Route path="/slott" element={<Slottwo/>} />
         <Route path="/spinwheel" element={<SpinWheel/>} />
@@ -49,6 +50,7 @@ const App = () => {
         <Route path="/wallet" element={<Wallet/>} />
         <Route path="/activity" element={<Activity/>} />
         <Route path="/promo" element={<Promotion/>}/>
+        <Route path="/newslot" element={<NewSlot/>} />
         {/* Consider adding a fallback route here */}
       </Routes>
 
