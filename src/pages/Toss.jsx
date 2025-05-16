@@ -21,18 +21,30 @@ const Toss = () => {
   const { backendUrl, token, balance, setUpdate } = useContext(AllContext);
 
   useEffect(() => {
-    const updateTimer = () => {
-      const timeLeft = 30 - (new Date().getSeconds() % 30);
-      setTimer(timeLeft);
-      if (timeLeft <= 15) setIsBetAllowed(false);
-      if (timeLeft === 5) {
-        declareResult().then(() => tossResult());
-        setUpdate(0);
+    const initializeGame = async () => {
+      try {
+        await axios.get(`${backendUrl}/api/games/currentround`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        // Start timer interval only after backend confirms timer start
+        const interval = setInterval(() => {
+          const timeLeft = 30 - (new Date().getSeconds() % 30);
+          setTimer(timeLeft);
+          if (timeLeft <= 15) setIsBetAllowed(false);
+          if (timeLeft === 5) {
+            declareResult().then(() => tossResult());
+            setUpdate(0);
+          }
+        }, 1000);
+
+        return () => clearInterval(interval);
+      } catch (error) {
+        toast.error("Failed to start timer from backend");
       }
     };
 
-    const interval = setInterval(updateTimer, 1000);
-    return () => clearInterval(interval);
+    initializeGame();
   }, []);
 
   const tossResult = async () => {
@@ -50,15 +62,15 @@ const Toss = () => {
     tossResult();
   }, []);
 
-  useEffect(() => {
-    console.log("Updated bets:", bets);
-  }, [bets]);
-
   const declareResult = async () => {
     try {
-      const response = await axios.post(`${backendUrl}/api/games/declare`, {}, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await axios.post(
+        `${backendUrl}/api/games/declare`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
 
       const outcome = response.data.result;
       setResult(outcome);
@@ -78,7 +90,7 @@ const Toss = () => {
         }
         setShowPopup(true);
       } else {
-        setMessage(`�ꪙ Result: ${outcome.toUpperCase()} (No bet placed)`);
+        setMessage(`📢 Result: ${outcome.toUpperCase()} (No bet placed)`);
       }
 
       setTimeout(() => resetGameState(), 5000);
