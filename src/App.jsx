@@ -19,6 +19,7 @@ import  Wallet  from './pages/Wallet';
 import Activity from './pages/Activity';
 import Promotion from './pages/Promotion';
 import NewSlot from './pages/NewSlot';
+import TossGame from './pages/TossGame';
 
 
 const App = () => {
@@ -40,8 +41,8 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register/>} />
         <Route path="/" element={<Home />} />
-        <Route path="/toss" element={<Toss />} />
-        <Route path="/tosst" element={<Tosst/>} />
+        {/* <Route path="/toss" element={<Toss />} />
+        <Route path="/tosst" element={<Tosst/>} /> */}
         {/* <Route path="/slot" element={<Slot />} /> */}
         <Route path="/casino" element={<Casino />} />
         <Route path="/slott" element={<Slottwo/>} />
@@ -52,8 +53,11 @@ const App = () => {
         <Route path="/activity" element={<Activity/>} />
         <Route path="/promo" element={<Promotion/>}/>
         <Route path="/newslot" element={<NewSlot/>} />
+        <Route path="/toss" element={<TossGame/>} />
         {/* Consider adding a fallback route here */}
       </Routes>
+
+      {/* <div className='bg-[#00000000]' ></div> */}
 
       {showHeaderFooter && <Footer />} {/* Render Footer only if not on Login page */}
     </div>

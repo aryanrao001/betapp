@@ -32,10 +32,11 @@ const Toss = () => {
           const timeLeft = 30 - (new Date().getSeconds() % 30);
           setTimer(timeLeft);
           if (timeLeft <= 15) setIsBetAllowed(false);
-          if (timeLeft === 5) {
-            declareResult().then(() => tossResult());
-            setUpdate(0);
-          }
+          // if (timeLeft === 5) {
+          //   declareResult().then(() => tossResult());
+          //   setUpdate(0);
+          // }
+          tossResult();
         }, 1000);
 
         return () => clearInterval(interval);

@@ -1,10 +1,14 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import { AllContext } from "../context/AllContext";
 import axios from "axios";
 import { toast } from "react-toastify";
 import head from "../assets/images/head.png";
 import tail from "../assets/images/onerupee.png";
 import { LockKeyhole } from 'lucide-react';
+import { io } from "socket.io-client";
+
+
+
 // import winimage from "../assets/images/win.png";
 const Tosst= () => {
   const [timer, setTimer] = useState(30);
@@ -21,25 +25,76 @@ const Tosst= () => {
 
   const { backendUrl, token , balance , setUpdate } = useContext(AllContext);
 
-  useEffect(() => {
-    const updateTimer = () => {
-      const timeLeft = 30 - (new Date().getSeconds() % 30);
-      setTimer(timeLeft);
-      if (timeLeft <= 15) {
-        setIsBetAllowed(false);
-      }
-      if (timeLeft === 5) {
-        declareResult().then(() => {
-          tossResult(); // now this will fetch latest bets after result is stored
-        });
-        setUpdate(0);
+  const [tossResults, setTossResults] = useState(null);
 
-      }
+  const socket = io(backendUrl); // ensure this is outside if singleton is intended
+
+  useEffect(() => {
+    const handleTimer = (newTime) => {
+      setTimer(newTime);
     };
 
-    const interval = setInterval(updateTimer, 1000);
-    return () => clearInterval(interval);
+    const handleTossResult = (data) => {
+      console.log(data.result);
+      setResult(data.result);
+      setMessage(`Toss Result: ${data.result}`);
+    };
+
+    const handleRoundStart = () => {
+      setIsBetAllowed(true);
+      setUserChoice(null);
+      setResult(null);
+    };
+
+    socket.on('timer', handleTimer);
+    socket.on('tossResult', handleTossResult);
+    socket.on('round-start', handleRoundStart);
+
+    return () => {
+      socket.off('timer', handleTimer);
+      socket.off('tossResult', handleTossResult);
+      socket.off('round-start', handleRoundStart);
+    };
   }, []);
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+  // useEffect(() => {
+  //   const initializeGame = async () => {
+  //     try {
+  //       await axios.get(`${backendUrl}/api/games/currentround`, {
+  //         headers: { Authorization: `Bearer ${token}` },
+  //       });
+
+  //       // Start timer interval only after backend confirms timer start
+  //       const interval = setInterval(() => {
+  //         const timeLeft = 30 - (new Date().getSeconds() % 30);
+  //         setTimer(timeLeft);
+  //         if (timeLeft <= 15) setIsBetAllowed(false);
+  //         if (timeLeft === 5) {
+  //           declareResult().then(() => tossResult());
+  //           setUpdate(0);
+  //         }
+  //       }, 1000);
+
+  //       return () => clearInterval(interval);
+  //     } catch (error) {
+  //       toast.error("Failed to start timer from backend");
+  //     }
+  //   };
+
+  //   initializeGame();
+  // }, []);
 
   const tossResult = async () => {
     try {
@@ -66,53 +121,53 @@ const Tosst= () => {
     console.log("Updated bets:", bets);
   }, [bets]);
 
-  const declareResult = async () => {
-    try {
-      const response = await axios.post(`${backendUrl}/api/games/declare`, {}, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+  // const declareResult = async () => {
+  //   try {
+  //     const response = await axios.post(`${backendUrl}/api/games/declare`, {}, {
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //     });
       
 
-      const outcome = response.data.result;
-      setResult(outcome);
-      setFlipClass(outcome === "heads" ? "flip-head" : "flip-tail");
+  //     const outcome = response.data.result;
+  //     setResult(outcome);
+  //     setFlipClass(outcome === "heads" ? "flip-head" : "flip-tail");
 
-      if (userChoice && betAmount > 0) {
-        if (userChoice === outcome) {
-          const win = betAmount * 2;
-          setWinAmount((prev) => prev + win);
-          setMessage(`🎉 You WON ₹${win}! It's ${outcome.toUpperCase()}`);
-          toast.success(`🎉 You WON ₹${win}! It's ${outcome.toUpperCase()}`);
-          setPopupImage("/path/to/win-image.jpg");
-        } else {
-          setMessage(`😢 You LOST ₹${betAmount}. It's ${outcome.toUpperCase()}`);
-          toast.error(`😢 You LOST ₹${betAmount}. It's ${outcome.toUpperCase()}`);
-          setPopupImage("/path/to/lose-image.jpg");
-        }
-        setShowPopup(true);
-      } else {
-        setMessage(`🪙 Result: ${outcome.toUpperCase()} (No bet placed)`);
-      }
+  //     if (userChoice && betAmount > 0) {
+  //       if (userChoice === outcome) {
+  //         const win = betAmount * 2;
+  //         setWinAmount((prev) => prev + win);
+  //         setMessage(`🎉 You WON ₹${win}! It's ${outcome.toUpperCase()}`);
+  //         toast.success(`🎉 You WON ₹${win}! It's ${outcome.toUpperCase()}`);
+  //         setPopupImage("/path/to/win-image.jpg");
+  //       } else {
+  //         setMessage(`😢 You LOST ₹${betAmount}. It's ${outcome.toUpperCase()}`);
+  //         toast.error(`😢 You LOST ₹${betAmount}. It's ${outcome.toUpperCase()}`);
+  //         setPopupImage("/path/to/lose-image.jpg");
+  //       }
+  //       setShowPopup(true);
+  //     } else {
+  //       setMessage(`🪙 Result: ${outcome.toUpperCase()} (No bet placed)`);
+  //     }
 
-      setTimeout(() => {
-        resetGameState();
-      }, 5000);
-    } catch (error) {
-      console.error("Error declaring result:", error);
-      toast.error("Failed to declare toss result!");
-    }
-  };
+  //     setTimeout(() => {
+  //       resetGameState();
+  //     }, 5000);
+  //   } catch (error) {
+  //     console.error("Error declaring result:", error);
+  //     toast.error("Failed to declare toss result!");
+  //   }
+  // };
 
-  const resetGameState = () => {
-    setUserChoice(null);
-    setBetAmount(0);
-    setIsBetAllowed(true);
-    setResult(null);
-    setMessage("");
-    setFlipClass("");
-  };
+  // const resetGameState = () => {
+  //   setUserChoice(null);
+  //   setBetAmount(0);
+  //   setIsBetAllowed(true);
+  //   setResult(null);
+  //   setMessage("");
+  //   setFlipClass("");
+  // };
 
   const placeBet = async (choice) => {
     if (!isBetAllowed || betAmount <= 0 || userChoice) return;
@@ -151,94 +206,7 @@ const Tosst= () => {
   const chips = [10, 50, 100, 500, 1000];
   return (
     <>
-      {/* <div className="bg-gradient-to-br p-10 from-[#191919] via-[#0f0f0f] to-[#191919] min-h-screen text-white">
-        <div className="py-16 text-center">
-          <h1 className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-600 via-amber-500 to-yellow-400 animate-pulse">
-            Flip Frenzy
-          </h1>
-          <p className="mt-2 text-md text-gray-300">Win big or cry trying 😎</p>
-          <p className="mt-4 text-amber-300 text-lg font-mono">{ } Next Flip In: {timer}s</p>
-        </div>
-
-        <div className="flex justify-center items-center flex-col px-4">
-          <div className="relative w-40 h-40 mb-8">
-            <div
-              className={`w-full h-full rounded-full transition-transform duration-700 ease-in-out transform ${flipClass}`}
-            >
-              <div
-                className={`w-full h-full flex items-center justify-center rounded-full text-3xl font-bold ${flipClass === "flip-head" ? "bg-yellow-700" : "bg-yellow-500"
-                  }`}
-              >
-                <img src={flipClass === "flip-head" ? head : tail} alt="" />
-              </div>
-            </div>
-          </div>
-
-          {message && <p className="text-lg font-bold text-emerald-300 mb-4 animate-bounce">{message}</p>}
-
-          <input
-            type="number"
-            placeholder="Enter Bet Amount"
-            value={betAmount}
-            onChange={(e) => setBetAmount(Number(e.target.value))}
-            disabled={!isBetAllowed}
-            className="mb-4 px-4 py-2 rounded bg-zinc-900 text-white border border-zinc-700 w-60 text-center"
-          />
-
-          <div className="flex gap-6">
-            <button
-              disabled={!isBetAllowed || betAmount <= 0 || userChoice}
-              onClick={() => handleUserBet("heads")}
-              className="px-6 py-3 rounded-full bg-yellow-600 hover:bg-yellow-700 font-bold shadow-md transition disabled:opacity-40"
-            >
-              Call Heads
-            </button>
-            <button
-              disabled={!isBetAllowed || betAmount <= 0 || userChoice}
-              onClick={() => handleUserBet("tails")}
-              className="px-6 py-3 rounded-full bg-amber-700 hover:bg-amber-800 font-bold shadow-md transition disabled:opacity-40"
-            >
-              Call Tails
-            </button>
-          </div>
-
-          {!isBetAllowed && (
-            <p className="text-red-400 font-semibold mt-4 animate-pulse">
-              ⏳ Betting closed! Wait for next round...
-            </p>
-          )}
-        </div>
-
-        {result && (
-          <div className="text-center mt-8">
-            <h2 className="text-2xl font-bold text-amber-400">Result: {result.toUpperCase()}</h2>
-            {userChoice && (
-              <p className="text-lg mt-2">
-                Your Choice: <span className="font-bold">{userChoice.toUpperCase()}</span>
-              </p>
-            )}
-            <p className="text-lg mt-2">
-              {userChoice
-                ? userChoice === result
-                  ? "✅ Congratulations, You Won!"
-                  : "❌ Sorry, You Lost."
-                : "❓ You didn't place a bet this round."}
-            </p>
-          </div>
-        )}
-
-        {showPopup && (
-          <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center">
-            <div className="bg-white p-6 rounded-lg flex flex-col items-center">
-              <img src={popupImage} alt="Result" className="w-60 h-60 mb-4" />
-              <button onClick={closePopup} className="bg-red-500 text-white px-4 py-2 rounded-full">
-                Close
-              </button>
-            </div>
-          </div>
-        )}
-      </div> */}
-
+      
       <div className='h-auto md:h-[100vh] flex justify-center items-center my-19'>
         <div className='bg-gray-900 w-[80%] h-[200vh] md:h-[90vh]'>
           <div className="top-bar h-[20vh]">
@@ -283,8 +251,7 @@ const Tosst= () => {
 
               {/* Coin Display - Mobile Top */}
               <div
-                className={`w-full h-60 md:h-40 flex items-center justify-center rounded-full transition-transform duration-700 ease-in-out transform 
-                            order-first md:order-none`}
+                className={`w-full h-60 md:h-40 flex items-center justify-center rounded-full transition-transform duration-700 ease-in-out transform order-first md:order-none`}
               >
                 <div className={`w-40 h-40 rounded-full transition-transform duration-700 ease-in-out transform ${flipClass}`}>
                   <img className="w-full h-full object-contain" src={flipClass === "flip-head" ? head : tail} alt="Coin" />
@@ -342,13 +309,7 @@ const Tosst= () => {
                 className="border pr-8 pl-3 rounded-sm text-sm h-[5vh] block md:hidden"
                 placeholder="Type Bet Amount"
               />
-
               <h1 className="text-center pt-6">Your Selected Bet Amount: {betAmount}</h1><br />
-              {/* {!isBetAllowed && (
-                <p className="text-red-400 font-semibold mt-4 animate-pulse">
-                  ⏳ Betting closed! Wait for next round...
-                </p>
-              )} */}
             </div>
 
             {/* Top Double */}
@@ -363,35 +324,10 @@ const Tosst= () => {
                     <div key={index} className="border-b-2 border-gray-800 flex pb-2 justify-between " ><span className="text-white uppercase ">{item.result}</span> <span className="text-blue-400">  <img src={item.result === 'heads' ? head : tail} className="w-5" /> </span></div>
                   ))
                 }
-                {/* <div><span className="text-white">BACONBURGER</span> <span className="text-blue-400">x5</span></div>
-                <div><span className="text-white">KEVIN</span> <span className="text-blue-400">x4</span></div>
-                <div><span className="text-white">MAD-MAN</span> <span className="text-blue-400">x3</span></div>
-                <div><span className="text-white">G-MAN</span> <span className="text-blue-400">x2</span></div>
-                <div><span className="text-white">GUS</span> <span className="text-blue-400">x2</span></div> */}
               </div>
             </div>
           </div>
-
           {/* Result Block */}
-          {/* {result && (
-            <div className="text-center mt-8">
-              <h2 className="text-2xl font-bold text-amber-400">Result: {result.toUpperCase()}</h2>
-              {userChoice && (
-                <p className="text-lg mt-2">
-                  Your Choice: <span className="font-bold">{userChoice.toUpperCase()}</span>
-                </p>
-              )}
-              <div className="text-lg mt-2">
-                {userChoice ? (
-                  <div className="w-full h-screen flex justify-center items-center">
-                    <img src={winimage} alt="You Win!" />
-                  </div>
-                ) : (
-                  "❓ You didn't place a bet this round."
-                )}
-              </div>
-            </div>
-          )} */}
         </div>
       </div>
     </>
