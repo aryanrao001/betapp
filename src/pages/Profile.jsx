@@ -13,6 +13,7 @@ import { AllContext } from '../context/AllContext';
 import axios from 'axios';
 import { toast } from 'react-toastify'
 import scanner from '../assets/images/scanner.jpg'
+import { useEffect } from 'react';
 
 const Profile = () => {
   const {
@@ -45,6 +46,7 @@ const Profile = () => {
   const [holderName, setholderName] = useState('');
   
   const [detail, setDetail] = useState(1);
+  const { setUpdate , update} = useContext(AllContext);
 
   const handleDepositSubmit = async () => {
     if (!amount || !transactionId || !screenshot) {
@@ -152,6 +154,11 @@ const Profile = () => {
       console.log(error)
     }
   }
+
+  useEffect(() => {
+    setUpdate(!update);
+  }, [ ]);
+  
 
   return (
     <div className="w-full min-h-screen bg-black text-white flex flex-col">

@@ -18,7 +18,7 @@ const Toss = () => {
   const [popupImage, setPopupImage] = useState("");
   const [bets, setBets] = useState([]);
 
-  const { backendUrl, token, balance, setUpdate } = useContext(AllContext);
+  const { backendUrl, token, balance,  } = useContext(AllContext);
 
   useEffect(() => {
     const initializeGame = async () => {
@@ -124,7 +124,7 @@ const Toss = () => {
         toast.success(response.data.message);
         setUserChoice(choice);
         setMessage(`🎯 You chose ${choice.toUpperCase()}! Waiting for result...`);
-        setUpdate(1);
+        // setUpdate(1);
       } else {
         toast.error(response.data.message);
       }

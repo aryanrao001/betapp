@@ -6,24 +6,33 @@ import { useContext } from 'react';
 import { AllContext } from '../context/AllContext';
 import tail from "../assets/images/onerupee.png";
 import head from "../assets/images/head.png";
-import {toast} from "react-toastify";
-import { LockKeyhole } from "lucide-react";
+import { toast } from "react-toastify";
+import { CircleX, LockKeyhole } from "lucide-react";
+import lose from "../assets/images/lose.png";
+import win from "../assets/images/win.png";
 
 const socket = io('http://localhost:4000'); // replace with your backend URL if deployed
 
 const TossGame = () => {
+
+  //Usestates
   const [selectedSide, setSelectedSide] = useState(null);
   const [amount, setAmount] = useState('');
   const [timer, setTimer] = useState(30);
   const [isBetPlaced, setIsBetPlaced] = useState(false);
   const [result, setResult] = useState(null);
+  const [winLose, setWinLose] = useState('');
   const [bettingOpen, setBettingOpen] = useState(true);
   const [flipClass, setFlipClass] = useState("")
   const [roundMessage, setRoundMessage] = useState('🔁 Waiting for round to start...');
   const [bets, setBets] = useState([]);
+  const [showPopup, setShowPopup] = useState(false);
 
-  const {  backendUrl , token, balance } = useContext(AllContext);
 
+  //Context
+  const { backendUrl, token, balance, setUpdate, update } = useContext(AllContext);
+
+  // ==== Place Bet Function ==== //
   const placeBet = async (choice) => {
     if (!choice || !amount) {
       alert('Please select side and enter amount');
@@ -38,19 +47,18 @@ const TossGame = () => {
         }
       );
       console.log(response);
-      if(response.data.success){
+      if (response.data.success) {
         toast.success(response.data.message)
+      } else {
+        toast.error(response.data.message);
       }
-
-      // console.log(response.data.error)
-      // console.log(response.data.message)
-
       setIsBetPlaced(true);
     } catch (error) {
       console.error('Failed to place bet:', error);
     }
   };
 
+  //==== Socket Use effect ====//
   useEffect(() => {
     socket.on('timer', (newTime) => {
       setTimer(newTime);
@@ -59,16 +67,31 @@ const TossGame = () => {
     socket.on('tossResult', (data) => {
       setResult(data.result);
       setRoundMessage(`🎉 Toss Result: ${data.result.toUpperCase()}`);
+      if (selectedSide !== null) {
+        if (data.result == selectedSide) {
+          setWinLose('WIN');
+          setShowPopup(true);
+          setSelectedSide('');
+        } else {
+          setWinLose('LOSE');
+          setShowPopup(true);
+          setSelectedSide('');
+        }
+      }
+      setSelectedSide(null);
     });
 
     socket.on('round-start', () => {
       setBettingOpen(true);
       setSelectedSide(null);
-      setAmount('');
       setResult(null);
       setIsBetPlaced(false);
+      setUpdate(!update)
       setRoundMessage('🔁 New round started! Place your bet.');
+      tossResult();
     });
+
+    tossResult();
 
     return () => {
       socket.off('timer');
@@ -77,6 +100,7 @@ const TossGame = () => {
     };
   }, []);
 
+  //==== Use Effect for Timer Updation ====//
   useEffect(() => {
     if (timer <= 10) {
       setBettingOpen(false);
@@ -91,7 +115,7 @@ const TossGame = () => {
     placeBet(choice);
   };
 
-
+  //==== All Chips ====//
   const chips = [10, 50, 100, 500, 1000];
 
   const tossResult = async () => {
@@ -110,88 +134,27 @@ const TossGame = () => {
     }
   };
 
-
-  // useEffect(() => {
-  //   const initializeGame = async () => {
-  //     try {
-  //       await axios.get(`${backendUrl}/api/games/currentround`, {
-  //         headers: { Authorization: `Bearer ${token}` },
-  //       });
-
-  //       // Start timer interval only after backend confirms timer start
-  //       const interval = setInterval(() => {
-  //         const timeLeft = 30 - (new Date().getSeconds() % 30);
-  //         setTimer(timeLeft);
-  //         if (timeLeft <= 10) setBettingOpen(false);
-  //         if (timeLeft === 5) {
-  //           declareResult().then(() => tossResult());
-  //           setUpdate(0);
-  //         }
-  //       }, 1000);
-
-  //       return () => clearInterval(interval);
-  //     } catch (error) {
-  //       toast.error("Failed to start timer from backend");
-  //     }
-  //   };
-
-  //   initializeGame();
-  // }, []);
-
-
   return (
     <>
-      {/* <div className="max-w-md mx-auto mt-10 p-4 border rounded shadow">
-        <h1 className="text-2xl font-bold mb-4">🪙 Toss Game</h1>
-        <div className="mb-2 text-xl font-semibold">⏱️ Timer: {timer}s</div>
-        <div className="mb-4 text-lg text-blue-600">{roundMessage}</div>
 
-        <div className="mb-4">
-          <button
-            className={`mr-2 px-4 py-2 rounded ${selectedSide === 'heads' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
-            onClick={() => setSelectedSide('heads')}
-            disabled={!bettingOpen || isBetPlaced}
-          >
-            Head
-          </button>
-          <button
-            className={`px-4 py-2 rounded ${selectedSide === 'tails' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
-            onClick={() => setSelectedSide('tails')}
-            disabled={!bettingOpen || isBetPlaced}
-          >
-            Tail
-          </button>
-        </div>
-
-        <input
-          type="number"
-          placeholder="Enter amount"
-          value={amount}
-          onChange={(e) => setAmount(e.target.value)}
-          className="mb-4 w-full px-3 py-2 border rounded"
-          disabled={!bettingOpen || isBetPlaced}
-        />
-
-        <button
-          onClick={placeBet}
-          disabled={!bettingOpen || isBetPlaced}
-          className="bg-green-500 text-white px-4 py-2 rounded disabled:opacity-50"
-        >
-          {isBetPlaced ? 'Bet Placed' : 'Place Bet'}
-        </button>
-
-        {result && (
-          <div className="mt-4 text-xl">
-            🏁 Final Result: <strong>{result.toUpperCase()}</strong>
+      {/* ==== Popup ==== */}
+      {showPopup && (
+        <div className="fixed top-0 left-0 w-full h-full bg-[#000000ce] bg-opacity-50 flex justify-center items-center z-20">
+          <div className="p-6 rounded-xl text-center">
+            <div
+              onClick={() => setShowPopup(false)}
+              className="text-right flex justify-end pr-5 pb-4  " ><CircleX /> </div>
+            <h2
+              className={`text-2xl font-bold ${setWinLose === 'WIN' ? "text-green-500" : "text-red-500"
+                }`}
+            >
+              <img src={setWinLose === 'WIN' ? win : lose} alt="" />
+              {setWinLose === 'WIN' ? "You Win!" : "You Lose!"}
+            </h2>
+            <p className="mt-2">{result}</p>
           </div>
-        )}
-      </div> */}
-
-      {/* <div className='' >
-        <div>
-        
         </div>
-      </div> */}
+      )}
 
       <div className='h-auto md:h-[100vh] flex justify-center items-center mt-30'>
         <div className='bg-gray-900 w-[80%] h-[200vh] md:h-[90vh]'>
@@ -203,7 +166,6 @@ const TossGame = () => {
               </div>
               <div className="info">
                 <span>Rs.{balance}</span>
-                {/* <span>ExD3.421</span> */}
               </div>
               <div className="hud-line"></div>
             </div>
@@ -245,10 +207,10 @@ const TossGame = () => {
               </div>
               <div>
                 {result && (
-                    <div className="mt-4 text-xl">
-                      🏁 Final Result: <strong>{result.toUpperCase()}</strong>
-                    </div>
-                  )}
+                  <div className="mt-4 text-xl">
+                    🏁 Final Result: <strong>{result.toUpperCase()}</strong>
+                  </div>
+                )}
               </div>
 
               {/* Heads / Tails Buttons */}
@@ -256,14 +218,14 @@ const TossGame = () => {
                 <button
                   className="px-6 py-2 border-r-2 border-l-2 border-white rounded hover:bg-white hover:text-black disabled:opacity-40"
                   disabled={!bettingOpen || amount <= 0 || selectedSide}
-                  onClick={() => (handleUserBet("heads"),setSelectedSide("heads"))}
+                  onClick={() => (handleUserBet("heads"), setSelectedSide("heads"))}
                 >
                   {selectedSide === "heads" ? <LockKeyhole /> : <span>HEADS</span>}
                 </button>
                 <button
                   className="px-6 py-2 border-r-2 border-l-2 border-white rounded hover:bg-white hover:text-black disabled:opacity-40"
                   disabled={!bettingOpen || amount <= 0 || selectedSide}
-                  onClick={() => (handleUserBet("tails") , setSelectedSide("tails"))}
+                  onClick={() => (handleUserBet("tails"), setSelectedSide("tails"))}
                 >
                   {selectedSide === "tails" ? <LockKeyhole /> : <span>TAILS</span>}
                 </button>
@@ -314,13 +276,12 @@ const TossGame = () => {
                 {
                   bets.map((item, index) => (
                     // <div key={index} className="border-b-2 border-gray-800 flex pb-2 justify-between " ><span className="text-white">{item.result}</span> <span className="text-blue-400"> { item.result === 'heads' ? ( <img src={head} className="w-10" /> ) : ( <img src={tail} className="w-10" />  ) } </span></div>
-                    <div key={index} className="border-b-2 border-gray-800 flex pb-2 justify-between " ><span className="text-white uppercase ">{item.winningSide}</span> <span className="text-blue-400">  <img src={item.winningSide=== 'heads' ? head : tail} className="w-5" /> </span></div>
+                    <div key={index} className="border-b-2 border-gray-800 flex pb-2 justify-between " ><span className="text-white uppercase ">{item.winningSide}</span> <span className="text-blue-400">  <img src={item.winningSide === 'heads' ? head : tail} className="w-5" /> </span></div>
                   ))
                 }
               </div>
             </div>
           </div>
-          {/* Result Block */}
         </div>
       </div>
     </>

@@ -10,7 +10,9 @@ const Wallet = () => {
     // setUserDetails,         // ✅ Added
     token,
     backendUrl,
-    balance
+    balance,
+    setUpdate, 
+    update
   } = useContext(AllContext);
 
   // const [balance, setBalance] = useState(userDetails?.balance || 0); // ✅ Balance managed locally
@@ -35,6 +37,8 @@ const Wallet = () => {
         setLoading(false);
       }
     };
+
+    setUpdate(!update);
 
     fetchSummary();
   }, [token, backendUrl]);

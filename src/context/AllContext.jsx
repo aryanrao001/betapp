@@ -7,7 +7,7 @@ const AllContextProvider = (props) => {
   const [token, setToken] = useState(() => localStorage.getItem("token")); // ✅ Load token initially from localStorage
   const [userDetails, setUserDetails] = useState();
   const [balance, setBalance] = useState();
-  const [update, setUpdate] = useState();
+  const [update, setUpdate] = useState(true);
 
   useEffect(() => {
     if (token) {
@@ -42,7 +42,7 @@ const AllContextProvider = (props) => {
   }, [update]);  
 
 
-  const value = { backendUrl, setToken, token, balance , userDetails , setUpdate };
+  const value = { backendUrl, setToken, token, balance , userDetails , setUpdate , update };
 
   return (
     <AllContext.Provider value={value}>
