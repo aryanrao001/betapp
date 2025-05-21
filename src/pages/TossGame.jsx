@@ -1,5 +1,5 @@
 // TossGame.jsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import io from 'socket.io-client';
 import axios from 'axios';
 import { useContext } from 'react';
@@ -11,7 +11,6 @@ import { CircleX, LockKeyhole } from "lucide-react";
 import lose from "../assets/images/lose.png";
 import win from "../assets/images/win.png";
 
-const socket = io('http://localhost:4000'); // replace with your backend URL if deployed
 
 const TossGame = () => {
 
@@ -27,6 +26,8 @@ const TossGame = () => {
   const [roundMessage, setRoundMessage] = useState('🔁 Waiting for round to start...');
   const [bets, setBets] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
+  const selectedSideRef = useRef(null);
+
 
 
   //Context
@@ -40,7 +41,9 @@ const TossGame = () => {
     }
 
     try {
-      const response = await axios.post('http://localhost:4000/api/bet/place-bet',
+      const response = await axios.post(
+        // {backendUrl}+'/api/bet/place-bet',
+        `${backendUrl}/api/bet/place-bet `,
         { side: choice, amount: parseFloat(amount), },
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -60,6 +63,8 @@ const TossGame = () => {
 
   //==== Socket Use effect ====//
   useEffect(() => {
+  const socket = io(backendUrl); // replace with your backend URL if deployed
+
     socket.on('timer', (newTime) => {
       setTimer(newTime);
     });
@@ -67,8 +72,11 @@ const TossGame = () => {
     socket.on('tossResult', (data) => {
       setResult(data.result);
       setRoundMessage(`🎉 Toss Result: ${data.result.toUpperCase()}`);
-      if (selectedSide !== null) {
-        if (data.result == selectedSide) {
+      console.log(selectedSideRef.current);
+      console.log(data.result)
+      if (selectedSideRef.current !== null) {
+        setShowPopup(true);
+        if (data.result === selectedSideRef.current) {
           setWinLose('WIN');
           setShowPopup(true);
           setSelectedSide('');
@@ -78,7 +86,7 @@ const TossGame = () => {
           setSelectedSide('');
         }
       }
-      setSelectedSide(null);
+      
     });
 
     socket.on('round-start', () => {
@@ -89,9 +97,12 @@ const TossGame = () => {
       setUpdate(!update)
       setRoundMessage('🔁 New round started! Place your bet.');
       tossResult();
+      setFlipClass('normal')
     });
 
     tossResult();
+    
+
 
     return () => {
       socket.off('timer');
@@ -99,6 +110,9 @@ const TossGame = () => {
       socket.off('round-start');
     };
   }, []);
+  useEffect(() => {
+    selectedSideRef.current = selectedSide;
+  }, [selectedSide]);
 
   //==== Use Effect for Timer Updation ====//
   useEffect(() => {
@@ -153,18 +167,17 @@ const TossGame = () => {
               onClick={() => setShowPopup(false)}
               className="text-right flex justify-end pr-5 pb-4  " ><CircleX /> </div>
             <h2
-              className={`text-2xl font-bold ${setWinLose === 'WIN' ? "text-green-500" : "text-red-500"
-                }`}
+              className={`text-2xl font-bold ${winLose === 'WIN' ? "text-green-500" : "text-red-500"}`}
             >
-              <img src={setWinLose === 'WIN' ? win : lose} alt="" />
-              {setWinLose === 'WIN' ? "You Win!" : "You Lose!"}
+              <img src={winLose === 'WIN' ? win : lose} alt="" />
+              {winLose === 'WIN' ? "You Win!" : "You Lose!"}
             </h2>
-            <p className="mt-2">{result}</p>
+            {/* <p className="mt-2">{result}</p> */}
           </div>
         </div>
       )}
 
-      <div className='h-auto md:h-[100vh] flex justify-center items-center mt-30'>
+      <div className='h-auto md:h-[100vh] flex justify-center items-center mt-25 md:mt-20'>
         <div className='bg-gray-900 w-[80%] h-[200vh] md:h-[90vh]'>
           <div className="top-bar h-[20vh]">
             <div className="header-container ">
@@ -219,6 +232,7 @@ const TossGame = () => {
                     🏁 Final Result: <strong>{result.toUpperCase()}</strong>
                   </div>
                 )}
+                {selectedSide}
               </div>
 
               {/* Heads / Tails Buttons */}
@@ -276,7 +290,7 @@ const TossGame = () => {
             </div>
 
             {/* Top Double */}
-            <div className="md:col-span-1 md:w-full  w-[35vh] ">
+            <div className="md:col-span-1 md:w-full">
               <div className="text-center text-lg border-b border-gray-700 pb-2 mb-2">
                 Last <span className="text-blue-400">Results</span>
               </div>
