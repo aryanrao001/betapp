@@ -48,9 +48,20 @@ const Header = () => {
             <div className="bg-black/10 p-2 rounded-full backdrop-blur-3xl">
               <Search />
             </div>
-            <Link to='/login' className="bg-[#ACFC00]/60 rounded-[15px] px-4 py-2 text-sm font-semibold">
+            {
+              token ? (
+                <span className='text-center bg-[#ACFC00]/10 py-1 rounded-2xl px-4 ' >{balance}</span>
+              ) : (
+                <Link to='/login'>
+                  <li className=" bg-[#ACFC00]/60 text-center rounded-[15px] px-4 py-2 mt-4 text-sm font-semibold w-full">
+                    Login
+                  </li>
+                </Link>
+              )
+            }
+            {/* <Link to='/login' className="bg-[#ACFC00]/60 rounded-[15px] px-4 py-2 text-sm font-semibold">
               Login
-            </Link>
+            </Link> */}
           </div>
 
           {/* Mobile Menu Toggle */}

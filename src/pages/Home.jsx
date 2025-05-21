@@ -22,9 +22,19 @@ import rcb from "../assets/images/rcb-logo.avif"
 
 import { User,NotebookText , Gamepad2 , ArrowUpRight,   } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import { useEffect } from 'react'
+import { useContext } from 'react'
+import { AllContext } from '../context/AllContext'
 
 
 const Home = () => {
+
+  const { token,  update , setUpdate } = useContext(AllContext);
+
+  useEffect(() => {
+    setUpdate(!update);
+  }, [token])
+  
 
 
   return (

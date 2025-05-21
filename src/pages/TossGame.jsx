@@ -115,6 +115,14 @@ const TossGame = () => {
     placeBet(choice);
   };
 
+  useEffect(() => {
+  if (result === "heads") {
+    setFlipClass("flip-head");
+  } else if (result === "tails") {
+    setFlipClass("flip-tail");
+  }
+}, [result]);
+
   //==== All Chips ====//
   const chips = [10, 50, 100, 500, 1000];
 
